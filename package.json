@@ -1,0 +1,22 @@
+{
+  "name": "webbluetooth-test-app",
+  "version": "0.0.1",
+  "description": "Test App for WebBluetooth APIs of Firefox OS.",
+  "main": "index.html",
+  "repository": {},
+  "keywords": [
+    "FirefoxOS",
+    "Bluetooth"
+  ],
+  "author": "Yong Hong",
+  "license": "MPL-2.0",
+  "bugs": {},
+  "homepage": "https://github.com/fxos-bt-squad/webbluetooth-test-app",
+  "devDependencies": {
+    "bower": "^1.4.1",
+    "gulp": "^3.9.0",
+    "gulp-jscs": "^2.0.0",
+    "gulp-jscs-stylish": "^1.1.2",
+    "gulp-jshint": "^1.11.2"
+  }
+}

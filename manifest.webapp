@@ -1,0 +1,20 @@
+{
+  "name": "WebBluetooth Test App",
+  "description": "Test App for WebBluetooth APIs of Firefox OS.",
+  "launch_path": "/index.html",
+  "locales": {
+    "en-US": {
+      "name": "WebBluetooth Test App",
+      "description": "Test App for WebBluetooth APIs of Firefox OS."
+    }
+  },
+  "type": "certified",
+  "permissions": {
+    "bluetooth": {}
+  },
+  "default_locale": "en-US",
+  "orientation": "default",
+  "icons": {
+    "128": "/style/icons/bluetooth128.png"
+  }
+}

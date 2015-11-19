@@ -1,0 +1,22 @@
+{
+  "name": "webbluetooth-test-app",
+  "version": "0.0.1",
+  "homepage": "",
+  "authors": [
+    "Yong Hong <yhong@mozilla.com>"
+  ],
+  "description": "Test App for WebBluetooth APIs of Firefox OS.",
+  "main": "index.html",
+  "keywords": [
+    "FirefoxOS",
+    "Bluetooth"
+  ],
+  "license": "MPL-2.0",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components"
+  ],
+  "dependencies": {
+  }
+}
