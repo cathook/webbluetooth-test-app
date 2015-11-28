@@ -18,7 +18,9 @@
     "bower_components"
   ],
   "dependencies": {
+    "base": "gaia-components/base",
     "evt": "gaia-components/evt#~0.4.0",
-    "gaia-component": "gaia-components/gaia-component#~0.4.0"
+    "gaia-component": "gaia-components/gaia-component#~0.4.0",
+    "gaia-theme": "gaia-components/gaia-theme#~0.5.1"
   }
 }
