@@ -1,0 +1,53 @@
+body {
+  height: 100%;
+  margin: 0;
+  position: absolute;
+  width: 100%;
+}
+
+#header {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  z-index: 5;
+}
+
+#page-walls {
+  bottom: 45px;
+  position: absolute;
+  top: 50px;
+  width: 100%;
+  z-index: 5;
+}
+
+#page-walls > app-page-wall {
+  height: 100%;
+  position: absolute;
+  width: 100%;
+}
+
+#toolbar {
+  bottom: 0;
+  position: absolute;
+  width: 100%;
+  z-index: 5;
+}
+
+#popup-pages {
+  position: absolute;
+  z-index: 95;
+}
+
+#menu {
+  bottom: 0;
+  position: absolute;
+  top: 50px;
+  width: 100%;
+  z-index: 99;
+}
+
+#menu > section[data-type=list] > ul > li {
+  -moz-user-select: none;
+  padding-bottom: 10px;
+  padding-top: 10px;
+}

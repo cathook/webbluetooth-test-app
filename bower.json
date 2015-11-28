@@ -20,7 +20,16 @@
   "dependencies": {
     "base": "gaia-components/base",
     "evt": "gaia-components/evt#~0.4.0",
+    "gaia-button": "gaia-components/gaia-button#~0.0.5",
     "gaia-component": "gaia-components/gaia-component#~0.4.0",
-    "gaia-theme": "gaia-components/gaia-theme#~0.5.1"
+    "gaia-dialog": "gaia-components/gaia-dialog#~0.2.4",
+    "gaia-drawer": "fxos-bt-squad/gaia-drawer#for-webbluetooth-test-app",
+    "gaia-header": "gaia-components/gaia-header#~0.8.4",
+    "gaia-icons": "gaia-components/gaia-icons#~0.9.2",
+    "gaia-list": "gaia-components/gaia-list#~0.2.2",
+    "gaia-text-input": "gaia-components/gaia-text-input#~0.2.1",
+    "gaia-theme": "gaia-components/gaia-theme#~0.5.1",
+    "gaia-toast": "gaia-components/gaia-toast#master",
+    "gaia-toolbar": "gaia-components/gaia-toolbar#master"
   }
 }

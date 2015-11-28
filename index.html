@@ -9,19 +9,70 @@
 
   <link rel="stylesheet" type="text/css" href="bower_components/base/base.css">
   <link rel="stylesheet" type="text/css" href="bower_components/gaia-theme/gaia-theme.css">
+  <link rel="stylesheet" type="text/css" href="bower_components/gaia-fonts/style.css">
+  <link rel="stylesheet" type="text/css" href="bower_components/gaia-icons/gaia-icons.css">
+
+  <link rel="stylesheet" type="text/css" href="style/css/main.css">
 
   <script src="bower_components/evt/index.js"></script>
+  <script src="bower_components/font-fit/font-fit.js"></script>
   <script src="bower_components/gaia-component/gaia-component.js"></script>
+
+  <script src="bower_components/gaia-button/gaia-button.js"></script>
+  <script src="bower_components/gaia-dialog/gaia-dialog.js"></script>
+  <script src="bower_components/gaia-drawer/script.js"></script>
+  <script src="bower_components/gaia-header/gaia-header.js"></script>
+  <script src="bower_components/gaia-icons/gaia-icons.js"></script>
+  <script src="bower_components/gaia-list/gaia-list.js"></script>
+  <script src="bower_components/gaia-text-input/gaia-text-input.js"></script>
+  <script src="bower_components/gaia-toast/gaia-toast.js"></script>
+  <script src="bower_components/gaia-toolbar/gaia-toolbar.js"></script>
 
   <script src="js/libs/utils.js"></script>
   <script src="js/libs/math.js"></script>
   <script src="js/libs/state_machine.js"></script>
   <script src="js/libs/touch_gesture.js"></script>
 
+  <script src="js/libs/data_viewer.js"></script>
+  <script src="js/libs/instance_creater_component.js"></script>
+  <script src="js/libs/log_component.js"></script>
   <script src="js/libs/page_list.js"></script>
   <script src="js/libs/page_wall.js"></script>
+  <script src="js/libs/var_tree_component.js"></script>
+
+  <script src="js/modules/task_manager.js"></script>
+  <script src="js/modules/task_manager/view.js"></script>
+  <script src="js/modules/task_manager/model.js"></script>
+
+  <script src="js/modules/mode.js"></script>
+  <script src="js/modules/var_tree.js"></script>
+  <script src="js/modules/var_tree/model.js"></script>
+  <script src="js/modules/var_tree/view.js"></script>
+  <script src="js/modules/var_tree/controller.js"></script>
+  <script src="js/modules/log.js"></script>
+  <script src="js/modules/log/view.js"></script>
 </head>
 
 <body class="theme-settings">
+  <gaia-header id="header" action="menu">
+    <h1 id="title"></h1>
+    <a id="mode"><span></span></a>
+  </gaia-header>
+  <section id="page-walls">
+  </section>
+  <gaia-toolbar id="toolbar">
+    <button id="show-log">Log</button>
+    <button id="slide-to-left">Go Left</button>
+    <button id="slide-to-right">Go Right</button>
+    <button id="switch-pages">Pages</button>
+  </gaia-toolbar>
+  <gaia-toast id="toast" timeout="2000"></gaia-toast>
+  <div id="popup-pages"></div>
+  <gaia-drawer id="menu">
+    <section data-type="list">
+      <ul id="menu-items">
+      </ul>
+    </section>
+  </gaia-dawer>
 </body>
 </html>
