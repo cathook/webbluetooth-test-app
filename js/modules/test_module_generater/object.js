@@ -37,6 +37,19 @@
     defaultAttributeTestModules =
         testModuleGenerater._wrapIntoArrayIfNeed(defaultAttributeTestModules);
 
+    var needImmediateHandle = false;
+    utils.iterateDict(attributesTestModules, function(attrName, testModules) {
+      if (testModuleUtils.checkTestModulesNeedImmediateHandle(testModules)) {
+        needImmediateHandle = true;
+        return false;
+      }
+    });
+    if (!needImmediateHandle) {
+      needImmediateHandle =
+          testModuleUtils.checkTestModulesNeedImmediateHandle(
+              defaultAttributeTestModules);
+    }
+
     /**
      * Gets the test modules for the specific attribute.
      *
@@ -90,6 +103,8 @@
     };
 
     _Model.prototype = Object.setPrototypeOf({
+      CUSTOM_EVENTS: new utils.Enum('ELEMENT_REFERENCE_CHANGED'),
+
       destroy: function() {
         utils.iterateDict(this._elementDescriptionMaintainers,
                           function(name, dm) { dm.destroy(); });
@@ -154,6 +169,7 @@
           this._elements.refresh.index += 1;
           this.fire(this.EVENTS.ELEMENT_ADDED, identifier);
           this._setElementDescription(identifier, attrName, attrValue);
+          this.fire(this.CUSTOM_EVENTS.ELEMENT_REFERENCE_CHANGED, identifier);
         }, this);
       },
 
@@ -173,6 +189,7 @@
           elementInfo.testModule = getAttributeTestModule(attrName, attrValue);
           this._elementDescriptionMaintainers[identifier].destroy();
           this._setElementDescription(identifier, attrName, attrValue);
+          this.fire(this.CUSTOM_EVENTS.ELEMENT_REFERENCE_CHANGED, identifier);
         }
       },
 
@@ -203,14 +220,21 @@
       this._taskManagerInterface = taskManagerInterface;
       this._model = model;
       this._onModeChanged = this._onModeChanged.bind(this);
+      this._onElementReferenceChanged =
+          this._onElementReferenceChanged.bind(this);
 
       mode.on(mode.EVENTS.MODE_CHANGED, this._onModeChanged);
+      this._model.on(this._model.CUSTOM_EVENTS.ELEMENT_REFERENCE_CHANGED,
+                     this._onElementReferenceChanged);
     };
 
     _Controller.prototype = Object.setPrototypeOf({
       destroy: function() {
+        this._model.off(this._model.CUSTOM_EVENTS.ELEMENT_REFERENCE_CHANGED,
+                        this._onElementReferenceChanged);
         mode.off(mode.EVENTS.MODE_CHANGED, this._onModeChanged);
 
+        this._onElementReferenceChanged = null;
         this._onModeChanged = null;
         this._taskManagerInterface = null;
         this._model = null;
@@ -241,15 +265,7 @@
         var elementInfo = this._model.elements[identifier];
         if ('reference' in elementInfo) {
           if (!elementInfo.childTask) {
-            var onKill = function() {
-              if (task === elementInfo.childTask) {
-                elementInfo.childTask = null;
-              }
-            };
-            var task = this._taskManagerInterface.createChildTask(
-                elementInfo.testModule.createTask, [elementInfo.reference],
-                elementInfo.testModule.NAME, true, onKill);
-            elementInfo.childTask = task;
+            this._createAttributeTask(elementInfo);
           }
           this._taskManagerInterface.switchToTask(elementInfo.childTask);
         }
@@ -281,6 +297,25 @@
         }
       },
 
+      _createAttributeTask: function(elementInfo) {
+        var onKill = function() {
+          if (task === elementInfo.childTask) {
+            elementInfo.childTask = null;
+          }
+        };
+        var task = this._taskManagerInterface.createChildTask(
+            elementInfo.testModule.createTask, [elementInfo.reference],
+            elementInfo.testModule.NAME, true, onKill);
+        elementInfo.childTask = task;
+      },
+
+      _onElementReferenceChanged: function(identifier) {
+        var elementInfo = this._model.elements[identifier];
+        if (elementInfo.testModule.needImmediateHandle) {
+          this._createAttributeTask(elementInfo);
+        }
+      },
+
       _onModeChanged: function() {
         this._model.editable = (mode.mode == mode.MODES.ENGINEER);
       }
@@ -298,6 +333,8 @@
       get DEFAULT_ATTRS_PATH() {
         return defaultAttrsPath;
       },
+
+      needImmediateHandle: needImmediateHandle,
 
       DescriptionMaintainer:
           dmm.generateConstantDescriptionMaintainerClass(() => 'Object'),

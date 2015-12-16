@@ -66,6 +66,8 @@
     };
 
     _Model.prototype = Object.setPrototypeOf({
+      CUSTOM_EVENTS: new utils.Enum('ELEMENT_REFERENCE_CHANGED'),
+
       destroy: function() {
         utils.iterateArray(this._elementDescriptionMaintainers, function(dm) {
           dm.destroy();
@@ -145,6 +147,7 @@
           this.fire(this.EVENTS.ELEMENT_ADDED, identifier);
           this._elementDescriptionMaintainers.push(
               this._setElementDescription(identifier, reference));
+          this.fire(this.CUSTOM_EVENTS.ELEMENT_REFERENCE_CHANGED, identifier);
         }
       },
 
@@ -165,6 +168,7 @@
           elementInfo.childTask = null;
           this._elementDescriptionMaintainers[index] =
               this._setElementDescription(identifier, this._testData[index]);
+          this.fire(this.CUSTOM_EVENTS.ELEMENT_REFERENCE_CHANGED, identifier);
         }
       },
 
@@ -200,14 +204,21 @@
       this._taskManagerInterface = taskManagerInterface;
       this._model = model;
       this._onModeChanged = this._onModeChanged.bind(this);
+      this._onElementReferenceChanged =
+          this._onElementReferenceChanged.bind(this);
 
       mode.on(mode.EVENTS.MODE_CHANGED, this._onModeChanged);
+      this._model.on(this._model.CUSTOM_EVENTS.ELEMENT_REFERENCE_CHANGED,
+                     this._onElementReferenceChanged);
     };
 
     _Controller.prototype = Object.setPrototypeOf({
       destroy: function() {
+        this._model.off(this._model.CUSTOM_EVENTS.ELEMENT_REFERENCE_CHANGED,
+                        this._onElementReferenceChanged);
         mode.off(mode.EVENTS.MODE_CHANGED, this._onModeChanged);
 
+        this._onElementReferenceChanged = null;
         this._onModeChanged = null;
         this._taskManagerInterface = null;
         this._model = null;
@@ -238,15 +249,7 @@
         var elementInfo = this._model.elements[identifier];
         if ('reference' in elementInfo) {
           if (!elementInfo.childTask) {
-            var onKill = function() {
-              if (task === elementInfo.childTask) {
-                elementInfo.childTask = null;
-              }
-            };
-            var task = this._taskManagerInterface.createChildTask(
-                elementInfo.testModule.createTask, [elementInfo.reference],
-                elementInfo.testModule.NAME, true, onKill);
-            elementInfo.childTask = task;
+            this._createAttributeTask(elementInfo);
           }
           this._taskManagerInterface.switchToTask(elementInfo.childTask);
         }
@@ -279,6 +282,25 @@
         }
       },
 
+      _createAttributeTask: function(elementInfo) {
+        var onKill = function() {
+          if (task === elementInfo.childTask) {
+            elementInfo.childTask = null;
+          }
+        };
+        var task = this._taskManagerInterface.createChildTask(
+            elementInfo.testModule.createTask, [elementInfo.reference],
+            elementInfo.testModule.NAME, true, onKill);
+        elementInfo.childTask = task;
+      },
+
+      _onElementReferenceChanged: function(identifier) {
+        var elementInfo = this._model.elements[identifier];
+        if (elementInfo.testModule.needImmediateHandle) {
+          this._createAttributeTask(elementInfo);
+        }
+      },
+
       _onModeChanged: function() {
         this._model.editable = (mode.mode == mode.MODES.ENGINEER);
       }
@@ -296,6 +318,9 @@
       get DEFAULT_ATTRS_PATH() {
         return defaultAttrsPath;
       },
+
+      needImmediateHandle: testModuleUtils.checkTestModulesNeedImmediateHandle(
+          elementTestModules),
 
       DescriptionMaintainer:
           dmm.generateConstantDescriptionMaintainerClass(getDescription),
