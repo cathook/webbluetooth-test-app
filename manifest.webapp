@@ -10,7 +10,8 @@
   },
   "type": "certified",
   "permissions": {
-    "bluetooth": {}
+    "bluetooth": {},
+    "moz-extremely-unstable-and-will-change-webcomponents": {}
   },
   "default_locale": "en-US",
   "orientation": "default",
